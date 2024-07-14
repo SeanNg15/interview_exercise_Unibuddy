@@ -82,12 +82,19 @@ While we don't expect everyone to complete this part of the exercise, it will fo
 
 We'd love to hear about
 * How you would go about implementing the solution
+  
 I implemented it by taking inspiration from the update tags method for conversations, while referencing the style in the like and add reaction methods. the updateMessageTag takes in an array of strings which are the tags, finds the message with the messageId and replaces the entire array of tags with the new one. I've added the update tags functionality in the message.data, logic, and resolver files to mimic the other functionality methods. I added a small test case for the function in message.data.spec as a sanity check.
+
 * What problems you might encounter
+  
 Originally, I wanted to reuse the Tag class used by conversations, but had trouble properly setting it up due to lack of familiarity with the repo, which caused the function to not work. Given enough time, I would be able to look through the repo more in depth and gain better understanding of it. The other problem I encountered was my inexperience with JEST and mocking, so this exercise was a great way for me to gain valuable insight on it.
+
 * How you would go about testing
+  
 I would write more unit tests for the message.data function, to properly capture edge cases. In the future, I would also write tests for the function in message.logic and resolver files and also integration tests to check if the function is working properly for the API.
+
 * What you might do differently
+  
 I would use the Tag class used by conversations for the message. I would probably also refactor it out since it would no longer make sense for it to be in the CreateChatConversation.dto.ts file. I would also look to add more tag types that are suitable for both conversations and messages. Since JEST is still quite new to me, I didn't have the time to write proper tests for the resolver and logic functions. Given more time, I would be able to familiarise myself with JEST and write more extensive tests.
 
 # Additional
