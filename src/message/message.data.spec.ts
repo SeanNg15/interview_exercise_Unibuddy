@@ -127,4 +127,27 @@ describe('MessageData', () => {
       expect(retrievedMessage.deleted).toEqual(true);
     });
   });
+
+  describe('updateMessageTags', () => {
+    it('successfully updates tags of a message', async () => {
+      const conversationId = new ObjectID();
+      const message = await messageData.create(
+        { conversationId, text: 'Message to update tags' },
+        senderId,
+      );
+
+      // Make sure tags are empty (undefined) at the start
+      expect(message.tags).toBeUndefined;
+      
+      const dummyTags = ['test'];
+      const taggedMessage = await messageData.updateMessageTags(new ObjectID(message.id), dummyTags);
+      expect(taggedMessage.tags?.length).toEqual(1);
+
+      // Make sure tags are added
+      const retrievedMessage = await messageData.getMessage(message.id.toHexString());
+      expect(retrievedMessage.tags?.length).toEqual(1);
+      expect(retrievedMessage.tags).toContain('test');
+
+    })
+  })
 });

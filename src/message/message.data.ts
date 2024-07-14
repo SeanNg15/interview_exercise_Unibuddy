@@ -11,6 +11,7 @@ import { MessageDto, GetMessageDto } from './models/message.dto';
 import { ObjectID } from 'mongodb';
 import { createRichContent } from './utils/message.helper';
 import { MessageGroupedByConversationOutput } from '../conversation/models/messagesFilterInput';
+import { Tag } from '../conversation/models/CreateChatConversation.dto';
 
 @Injectable()
 export class MessageData {
@@ -100,7 +101,7 @@ export class MessageData {
         returnOriginal: false,
       },
     );
-    if (!deleted) throw new Error('The message did delete properly');
+    if (!deleted) throw new Error('The message did not delete properly');
     return chatMessageToObject(deleted);
   }
 
@@ -369,5 +370,22 @@ export class MessageData {
     }
 
     return chatMessageToObject(updatedResult);
+  }
+
+  async updateMessageTags(messageId: ObjectID, tags: string[]): Promise<ChatMessage> {
+    const query = { _id: messageId };
+    const updateTags = {
+      $set: { tags : tags } ,
+    };
+    const updated = await this.chatMessageModel.findOneAndUpdate(
+      query,
+      updateTags,
+      {
+        new: true,
+        returnOriginal: false,
+      },
+    );
+    if (!updated) throw new Error(`Could not update tags on message id ${messageId}`);
+    return chatMessageToObject(updated);
   }
 }

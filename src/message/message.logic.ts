@@ -13,6 +13,7 @@ import {
   ResolveMessageDto,
   ReactionDto,
   PollOptionDto,
+  UpdateTagsDto,
 } from './models/message.dto';
 import { MessageData } from './message.data';
 import { IAuthenticatedUser } from '../authentication/jwt.strategy';
@@ -29,6 +30,7 @@ import {
   UnresolveMessageEvent,
   ReactedMessageEvent,
   UnReactedMessageEvent,
+  UpdatedTagsEvent,
 } from '../conversation/conversation-channel.socket';
 import { UserService } from '../user/user.service';
 import { ConversationData } from '../conversation/conversation.data';
@@ -673,6 +675,34 @@ export class MessageLogic implements IMessageLogic {
       authenticatedUser.userId,
       option,
     );
+  }
+
+  async updateTagsOfMessage(
+    updateTag: UpdateTagsDto,
+    authenticatedUser: IAuthenticatedUser,
+  ) {
+    await this.throwForbiddenErrorIfNotAuthorized(
+      authenticatedUser,
+      updateTag.messageId,
+      Action.readConversation,
+    );
+
+    const message = await this.messageData.updateMessageTags(
+      updateTag.messageId,
+      updateTag.tags
+    );
+
+    const messageEvent = new UpdatedTagsEvent({
+      userId: authenticatedUser.userId,
+      messageId: updateTag.messageId,
+      tags: updateTag.tags,
+    });
+    this.conversationChannel.send(
+      messageEvent,
+      updateTag.conversationId.toHexString(),
+    );
+
+    return message;
   }
 
   private validateOption(

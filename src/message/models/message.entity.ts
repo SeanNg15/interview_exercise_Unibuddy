@@ -146,6 +146,9 @@ export class ChatMessage {
   @Field(() => [Reaction], { nullable: true })
   reactions?: Reaction[];
 
+  @Field(() => [String], { nullable: true })
+  tags?: Array<string>;
+
   @Field({ defaultValue: false, nullable: true })
   isSenderBlocked?: boolean;
 }

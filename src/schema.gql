@@ -106,6 +106,7 @@ type ChatMessage {
   likesCount: Int!
   richContent: RichMessageContent
   reactions: [Reaction!]
+  tags: [String!]!
   isSenderBlocked: Boolean
 }
 
